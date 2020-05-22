@@ -40,7 +40,11 @@ namespace CarFit
 
         private void RegisterAllServiceType(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<ICarWashService, CarWashService>();
+            containerRegistry.Register<Services.ICarWashService, Services.CarWashService>();
+
+            containerRegistry.Register<ViewModels.ICleaningListViewModel, ViewModels.CleaningListViewModel>();
+
+            containerRegistry.Register<Views.ICleaningList,Views.CleaningList>();
         }
     }
 }

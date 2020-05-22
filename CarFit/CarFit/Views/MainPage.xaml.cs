@@ -9,20 +9,25 @@ namespace CarFit.Views
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        private Views.ICleaningList _cleaningListPage;
+
+
+        public MainPage(Views.ICleaningList cleaningListPage)
         {
             InitializeComponent();
+            _cleaningListPage = cleaningListPage;
         }
 
         private async void BtnCleaningList_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Views.CleaningList());
+            var pg = _cleaningListPage as Views.CleaningList;
+            await Navigation.PushAsync(pg);
         }
 
-        private async void btnCalendar_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new Calendar());
-        }
+        //private async void btnCalendar_Clicked(object sender, EventArgs e)
+        //{
+        //    await Navigation.PushAsync(new Calendar());
+        //}
 
     }
 }

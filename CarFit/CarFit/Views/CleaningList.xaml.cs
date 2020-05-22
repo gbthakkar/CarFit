@@ -3,22 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using CarFit.ViewModels;
+using Prism.Commands;
 using Prism.Services.Dialogs;
 
 namespace CarFit.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CleaningList : ContentPage
+    public partial class CleaningList : ContentPage, ICleaningList
     {
-        public CleaningList()
+        private CleaningListViewModel _cleaningListViewModel;
+        
+
+
+
+        public CleaningList(CleaningListViewModel cleaningListViewModel)
         {
             InitializeComponent();
-            // BindingContext = new CleaningListViewModel(dialogService);
+
+            _cleaningListViewModel = cleaningListViewModel;
+            this.BindingContext = _cleaningListViewModel;
         }
 
         protected override void OnSizeAllocated(double width, double height)
@@ -28,7 +36,7 @@ namespace CarFit.Views
 
             VisualStateManager.GoToState(PageHeading, state);
         }
-
+        
 
     }
 }

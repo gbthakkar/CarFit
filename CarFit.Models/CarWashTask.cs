@@ -12,8 +12,6 @@ namespace CarFit.Models
 
         public int CustomerId { get; set; }
 
-
-
         public string HouseOwnerFirstName { get; set; }
         public string HouseOwnerLastName { get; set; }
         public string FullName
