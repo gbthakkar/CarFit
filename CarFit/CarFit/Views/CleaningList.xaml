@@ -12,7 +12,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              mc:Ignorable="d"
              d:NavigationPage.HasNavigationBar="False"
-             Title="I DAG"
+             Title="Cleaning List"
              BackgroundColor="#f2f2ef"
              x:Class="CarFit.Views.CleaningList">
 
@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" Text="I DAG" 
+                <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" Text="{Binding FilterDate}" 
                        Style="{StaticResource PageHeading}" 
                        HorizontalTextAlignment="Center" 
                        FontFamily="{StaticResource BoldFont}" />

@@ -1,3 +1,4 @@
+using CarFit.Services;
 using Prism;
 using Prism.Ioc;
 using CarFit.ViewModels;
@@ -31,9 +32,15 @@ namespace CarFit
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
+            RegisterAllServiceType(containerRegistry);
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+        }
+
+        private void RegisterAllServiceType(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<ICarWashService, CarWashService>();
         }
     }
 }
