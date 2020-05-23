@@ -8,32 +8,77 @@
              xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms" 
              xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView" 
              xmlns:views="clr-namespace:CarFit.Views;assembly=CarFit"
+             xmlns:vm="clr-namespace:CarFit.ViewModels;assembly=CarFit"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:valueConverter="clr-namespace:CarFit.Common.ValueConverter;assembly=CarFit"
              mc:Ignorable="d"
              d:NavigationPage.HasNavigationBar="False"
              Title="Cleaning List"
              BackgroundColor="#f2f2ef"
              x:Class="CarFit.Views.CleaningList">
+
     <!--prism:ViewModelLocator.AutowireViewModel="True"-->
+
+    <ContentPage.BindingContext>
+        <vm:CleaningListViewModel></vm:CleaningListViewModel>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <valueConverter:InverseBoolConverter x:Key="InverseBool"></valueConverter:InverseBoolConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>-->
 
     <ContentPage.Content>
 
 
-        <StackLayout>
-            <!--<StackLayout.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"/>
-            </StackLayout.GestureRecognizers>-->
+        <StackLayout><!--page content wrapper-->
 
-            <StackLayout IsVisible="{Binding IsCalenderVisible,Mode=TwoWay,UpdateSourceEventName=PropertyChanged}" >
-                <views:Calendar></views:Calendar>
-            </StackLayout>
+            <!--Calender wrapper-->
+            <AbsoluteLayout
+                IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"
+                > 
+                <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"-->
+                <StackLayout>
+                    <views:Calendar></views:Calendar>
+
+                </StackLayout>
+
+                <Button
+                    x:Name="BtnCLoseCalender"
+                    BackgroundColor="LightGray"
+                    Text="[ X ]"
+                    Padding="0,0"
+                    CornerRadius="{OnPlatform iOS='20', Android='30'}"
+                    HeightRequest="25"
+                    WidthRequest="40"
+                    AbsoluteLayout.LayoutFlags="XProportional"
+                    AbsoluteLayout.LayoutBounds="1,0"
+                    Margin="0,5,5,0"
+                    Command="{Binding PageTapCommand}"
+                    >
+                    <!--<Button.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>
+                    </Button.GestureRecognizers>-->
+
+                </Button>
+            </AbsoluteLayout>
+
+                
+           
+
+
+
+
+
 
             <StackLayout>
-                <StackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"/>
-                </StackLayout.GestureRecognizers>
 
-                <Grid Padding="0" >
+                <Grid Padding="0" 
+                      IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}">
+                    <!--IsVisible="{Binding IsCalenderVisible,Mode=TwoWay,UpdateSourceEventName=PropertyChanged,Converter={valueConverter:InverseBoolConverter}}">-->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -46,8 +91,18 @@
                     <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" 
                        Text="{Binding FilterDate,UpdateSourceEventName=PropertyChanged}" 
                        Style="{StaticResource PageHeading}" 
-                       HorizontalTextAlignment="Center" 
+                       HorizontalTextAlignment="Center" IsVisible="False"
                        FontFamily="{StaticResource BoldFont}" />
+
+
+                    <DatePicker x:Name="FilterFromDate"
+                        Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" 
+                        Date="{Binding FromDate.Date,UpdateSourceEventName=PropertyChanged,Mode=TwoWay}"
+                        DateSelected="FilterFromDate_OnDateSelected"
+                        >
+                        <DatePicker.Format>dd-MMM-yyyy</DatePicker.Format>
+                    </DatePicker>
+
                     <ffimageloadingsvg:SvgCachedImage Margin="{OnPlatform iOS='0,60,0,0', Android='0,30,20,0'}" 
                         Source="Calender.svg" 
                         WidthRequest="20" 
@@ -57,105 +112,25 @@
                             <TapGestureRecognizer Command="{Binding ShowCalenderCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>
                         </ffimageloadingsvg:SvgCachedImage.GestureRecognizers>
                     </ffimageloadingsvg:SvgCachedImage>
-
-                    <Label x:Name="LblTestToggle" Grid.Row="1" Grid.Column="0"  Text="Text toggle label" 
-                       IsVisible="{Binding IsCalenderVisible,Mode=TwoWay,UpdateSourceEventName=PropertyChanged}" 
-                       Style="{StaticResource PageHeading}" 
-                       Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" 
-                       ></Label>
                 </Grid>
 
-
-                
-
-
-                <CollectionView ItemsSource="{Binding CleaningList}" Margin="20,20,20,20">
+                <CollectionView ItemsSource="{Binding CleaningList,UpdateSourceEventName=PropertyChanged}" Margin="20,20,20,20">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Margin="0, 0, 0, 15">
-                                
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"/>
-                                </StackLayout.GestureRecognizers>
-
                                 <Frame                               
                                 HorizontalOptions="StartAndExpand"
                                 VerticalOptions="StartAndExpand"                                
                                 Padding="10,20,0,10" 
                                 HasShadow="False"
                                 IsClippedToBounds="True" BackgroundColor="#ffffff" CornerRadius="15" >
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"/>
-                                    </Frame.GestureRecognizers>
 
-
-                                    <views:CleaningListDataTemplate>
-                                        <views:CleaningListDataTemplate.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"/>
-                                        </views:CleaningListDataTemplate.GestureRecognizers>
-                                    </views:CleaningListDataTemplate>
+                                    <views:CleaningListDataTemplate></views:CleaningListDataTemplate>
 
 
                                 </Frame>
                             </StackLayout>
-                            <!--<StackLayout Margin="10">
-                        <Frame CornerRadius="15" Padding="10,10,0,10" HasShadow="False" IsClippedToBounds="True" BackgroundColor="White">
-                                <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="50" />
-                                </Grid.ColumnDefinitions>
 
-                                <Label Grid.Row="1"
-                                       Text="{Binding Name}"
-                                       FontSize="18"
-                                       HorizontalTextAlignment="Start"
-                                       HorizontalOptions="Start"
-                                       VerticalOptions="Center"
-                                       FontFamily="{StaticResource BoldFont}" />
-                                <Button BackgroundColor="{Binding Color, Converter={StaticResource StringToColorConverter}}" Style="{StaticResource buttonStyleList}" Grid.Row="1"
-                                   Grid.Column="2"
-                                   Text="{Binding Location}"
-                                   HorizontalOptions="End"
-                                   FontFamily="{StaticResource SemiboldFont}"/>
-                                <Label Grid.Row="2" Grid.ColumnSpan="2"
-                                   Text="{Binding Details}"
-                                   FontSize="12"
-                                       HorizontalTextAlignment="Start"
-                                   FontFamily="{StaticResource RegularFont}" />
-                                <Label Grid.Row="3" 
-                                   Text="{Binding dTime}"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="Start"
-                                   HorizontalOptions="Start"
-                                   FontFamily="{StaticResource RegularFont}" />
-                                <Label Grid.Row="3" Grid.Column="2"
-                                   Text="{Binding dMinute}"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="End"
-                                   Padding="0,0,10,0"
-                                   FontFamily="{StaticResource RegularFont}" />
-                                <Label Grid.Row="4" 
-                                   Text="{Binding Address}"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="Start"
-                                   FontFamily="{StaticResource RegularFont}" />
-                                <Label Grid.Row="4" Grid.Column="2"
-                                   Text="{Binding Distance}"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="End"
-                                   Padding="0,0,10,0"
-                                   FontFamily="{StaticResource RegularFont}" />
-                            </Grid>                            
-                            
-                        </Frame>
-                        </StackLayout>-->
 
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

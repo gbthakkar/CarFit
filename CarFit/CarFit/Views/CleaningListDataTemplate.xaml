@@ -9,11 +9,12 @@
              x:Class="CarFit.Views.CleaningListDataTemplate">
 
     <ContentView.Content>
+        
 
-        <StackLayout>
 
-            <Grid 
-                Padding="0">
+        <StackLayout >
+
+            <Grid Padding="0">
 
                 <Grid.RowDefinitions>
                     <RowDefinition
@@ -38,12 +39,6 @@
                     Grid.Column="0"
                     HorizontalOptions="FillAndExpand"
                     HeightRequest="40">
-                    <!--<Label
-                        x:Name="CardlblTitle"
-                        VerticalOptions="Start"
-                        Text="Jeff Peterson"
-                        Style="{StaticResource TitleHeading}"
-                        FontFamily="{StaticResource BoldFont}" />-->
                     <Label
                         x:Name="CardlblTitle"
                         VerticalOptions="Start"
@@ -74,6 +69,7 @@
                 <Label
                     x:Name="detailsText"
                     Grid.Row="1"
+                    Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Text="{Binding WashType}"
                     FontFamily="{StaticResource RegularFont}"

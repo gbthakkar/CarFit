@@ -37,7 +37,7 @@ namespace CarFit.Models
         /// <summary>
         /// Planned Time
         /// </summary>
-        public DateTime? StartTimeUtc { get; set; }//when have time schedule by planner.
+        public DateTime StartTimeUtc { get; set; }//when have time schedule by planner.
 
         /// <summary>
         /// Start time for time slot required by customer.
@@ -54,24 +54,39 @@ namespace CarFit.Models
             get
             {
                 string temp = "";
-                if (this.StartTimeUtc.HasValue)
+                //if (this.StartTimeUtc.HasValue)
+                //{
+                //    temp = this.StartTimeUtc.GetValueOrDefault().ToString("hh:mm");
+                //}
+                //else
+                //{
+                //    if (this.ExpectedStartTimeUtc.HasValue)
+                //    {
+                //        temp = this.ExpectedStartTimeUtc.GetValueOrDefault().ToString("hh:mm");
+                //    }
+                //    if (this.ExpectedEndTimeUtc.HasValue)
+                //    {
+                //        temp = temp + " / " + this.ExpectedEndTimeUtc.GetValueOrDefault().ToString("hh:mm");
+                //    }
+                //}
+
+
+                if (this.ExpectedStartTimeUtc.HasValue)
                 {
-                    temp = this.StartTimeUtc.GetValueOrDefault().ToString("hh:mm");
+                    temp = this.ExpectedStartTimeUtc.GetValueOrDefault().ToString("hh:mm");
+                    if (this.ExpectedEndTimeUtc.HasValue)
+                    {
+                        temp = temp + " / " + this.ExpectedEndTimeUtc.GetValueOrDefault().ToString("hh:mm");
+                    }
                 }
                 else
                 {
-                    if (this.ExpectedStartTimeUtc.HasValue)
-                    {
-                        temp = this.ExpectedStartTimeUtc.GetValueOrDefault().ToString("hh:mm");
-                    }
-                    if (this.ExpectedEndTimeUtc.HasValue)
-                    {
-                        temp = temp + "/" + this.ExpectedEndTimeUtc.GetValueOrDefault().ToString("hh:mm");
-                    }
+                    temp = this.StartTimeUtc.ToString("hh:mm");
                 }
 
                 return temp;
             }
+
         }
     }
 }

@@ -7,6 +7,6 @@ namespace CarFit.Services
 {
     public interface ICarWashService
     {
-        List<CarWashTask> GetCleaningList();
+        List<CarWashTask> GetCleaningList(DateTime fromDate);
     }
 }

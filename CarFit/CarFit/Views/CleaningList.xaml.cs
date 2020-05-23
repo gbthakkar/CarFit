@@ -10,23 +10,41 @@ using Xamarin.Forms.Xaml;
 using CarFit.ViewModels;
 using Prism.Commands;
 using Prism.Services.Dialogs;
+using SkiaSharp;
 
 namespace CarFit.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CleaningList : ContentPage, ICleaningList
     {
-        private CleaningListViewModel _cleaningListViewModel;
+        //private ICleaningListViewModel _cleaningListViewModel;
+        private IDialogService _dialogService;
+
+
         
 
+        //public CleaningList()
+        //{
+            
+        //}
 
-
-        public CleaningList(CleaningListViewModel cleaningListViewModel)
+        public CleaningList(IDialogService dialogService)
         {
             InitializeComponent();
 
-            _cleaningListViewModel = cleaningListViewModel;
-            this.BindingContext = _cleaningListViewModel;
+            //_cleaningListViewModel = cleaningListViewModel;
+            _dialogService = dialogService;
+
+            //this.BindingContext = _cleaningListViewModel;
+
+            //TapGestureRecognizer objTapGestureRecognizer1 = new TapGestureRecognizer();
+            //objTapGestureRecognizer1.Tapped += ((o2, e2) =>
+            //{
+            //    _cleaningListViewModel.IsCalenderVisible = false;
+            //});
+            //this.Content.GestureRecognizers.Add(objTapGestureRecognizer1);
+
+
         }
 
         protected override void OnSizeAllocated(double width, double height)
@@ -36,7 +54,12 @@ namespace CarFit.Views
 
             VisualStateManager.GoToState(PageHeading, state);
         }
-        
 
+
+        private void FilterFromDate_OnDateSelected(object sender, DateChangedEventArgs e)
+        {
+            var obj = this.BindingContext as CleaningListViewModel;
+            obj.FromDate = e.NewDate;
+        }
     }
 }

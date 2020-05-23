@@ -10,7 +10,7 @@ namespace CarFit.Services
 {
     public class CarWashService:ICarWashService
     {
-        public List<CarWashTask> GetCleaningList()
+        public List<CarWashTask> GetCleaningList(DateTime fromDate)
         {
             string listJson = "";
             byte[] resultBytes = null;
@@ -22,12 +22,12 @@ namespace CarFit.Services
 
             try
             {
-                string url = Common.Constants.CleaningListUrl;
+                string url = $"{Common.Constants.CleaningListUrl}?fromDate={fromDate:yyyy-MM-dd}" ;
                 //resultBytes = hc.GetByteArrayAsync(url).Result;
                 //listJson = System.Text.UTF8Encoding.UTF8.GetString(resultBytes);
 
-
-                resultBytes = wc.DownloadData(Common.Constants.CleaningListUrl);
+                
+                resultBytes = wc.DownloadData(url);
                 listJson = System.Text.Encoding.UTF8.GetString(resultBytes);
 
                 lst = JsonConvert.DeserializeObject<List<CarWashTask>>(listJson);

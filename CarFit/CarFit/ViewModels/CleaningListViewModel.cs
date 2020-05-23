@@ -14,6 +14,7 @@ using Prism.Commands;
 using System.Windows;
 using System.Windows.Input;
 using Xamarin.Forms;
+using DryIoc;
 
 namespace CarFit.ViewModels
 {
@@ -21,12 +22,21 @@ namespace CarFit.ViewModels
 
     public class CleaningListViewModel : BindableBase, INotifyPropertyChanged, ICleaningListViewModel
     {
-        
+
+        //ctor
+        public CleaningListViewModel()
+        {
+            _carWashService = App.IoCContainer.Resolve<ICarWashService>();
+            ShowCalenderCommand = new DelegateCommand(ShowCalender);
+            PageTapCommand = new DelegateCommand(PageTapAction);
+            LoadCleaningList();
+        }
+
 
         private ICarWashService _carWashService;
         public new event PropertyChangedEventHandler PropertyChanged;
 
-        DateTime _fromDate = DateTime.Today;
+        DateTime _fromDate = new DateTime(2020,5,21);
         public DateTime FromDate
         {
             get { return _fromDate;}
@@ -35,11 +45,12 @@ namespace CarFit.ViewModels
                 _fromDate = value;
                 //OnPropertyChanged(nameof(FromDate));
                 OnPropertyChanged(nameof(FilterDate));
+                LoadCleaningList();
             }
         
         }
         
-        DateTime _toDate = DateTime.Today;
+        DateTime _toDate = new DateTime(2020, 5, 21);
 
         public DateTime ToDate
         {
@@ -69,6 +80,11 @@ namespace CarFit.ViewModels
                     tmp = $"{FromDate:dd-MMM} to {ToDate:dd-MMM}";
                 }
 
+
+                //at present using only one date, so 
+                tmp = $"{FromDate:dd-MMM-yy}";
+
+
                 return tmp;
             }
 
@@ -92,24 +108,15 @@ namespace CarFit.ViewModels
         
 
 
-        //ctor
-        public CleaningListViewModel(IDialogService dialogService, INavigationService navigationService
-            , ICarWashService carWashService
-        )
-        {
-            _carWashService = carWashService;
-            ShowCalenderCommand = new DelegateCommand(ShowCalender);
-            PageTapCommand = new DelegateCommand(PageTapAction);
-
-            LoadCleaningList();
-            
-        }
+       
 
         public void LoadCleaningList()
         {
             //var source = _carWashService.GetCleaningList();
-            this.CleaningList = new ObservableCollection<CarWashTask>(_carWashService.GetCleaningList());
+            this.CleaningList = new ObservableCollection<CarWashTask>(_carWashService.GetCleaningList(FromDate));
             //return source;
+            OnPropertyChanged(nameof(CleaningList));
+
         }
 
 

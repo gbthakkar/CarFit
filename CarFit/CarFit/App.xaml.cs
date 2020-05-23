@@ -3,6 +3,8 @@ using Prism;
 using Prism.Ioc;
 using CarFit.ViewModels;
 using CarFit.Views;
+using DryIoc;
+using Prism.DryIoc;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Forms;
@@ -18,6 +20,21 @@ namespace CarFit
          * This imposes a limitation in which the App class must have a default constructor. 
          * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
          */
+
+        private static IContainer ioCContainer;
+        public static IContainer IoCContainer
+        {
+            get => ioCContainer;
+            private set => ioCContainer = value;
+        }
+
+        private static IContainerRegistry iocRegistry;
+        public static IContainerRegistry IoCRegistry
+        {
+            get => iocRegistry;
+            private set => iocRegistry = value;
+        }
+
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -31,6 +48,9 @@ namespace CarFit
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            App.IoCContainer = containerRegistry.GetContainer();
+            App.IoCRegistry = containerRegistry;
+
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
             RegisterAllServiceType(containerRegistry);
 
@@ -46,5 +66,7 @@ namespace CarFit
 
             containerRegistry.Register<Views.ICleaningList,Views.CleaningList>();
         }
+
+
     }
 }
