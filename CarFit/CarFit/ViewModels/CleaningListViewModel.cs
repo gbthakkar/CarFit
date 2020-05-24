@@ -23,17 +23,24 @@ namespace CarFit.ViewModels
     public class CleaningListViewModel : BindableBase, INotifyPropertyChanged, ICleaningListViewModel
     {
 
+        private readonly ICarWashService _carWashService;
+        private readonly ICommonService _commonService;
+
+
         //ctor
         public CleaningListViewModel()
         {
             _carWashService = App.IoCContainer.Resolve<ICarWashService>();
+            _commonService = App.IoCContainer.Resolve<ICommonService>();
             ShowCalenderCommand = new DelegateCommand(ShowCalender);
             PageTapCommand = new DelegateCommand(PageTapAction);
+
+            _taskStatuses = _commonService.GetTaskStatusList();
             LoadCleaningList();
         }
 
 
-        private ICarWashService _carWashService;
+        
         public new event PropertyChangedEventHandler PropertyChanged;
 
         DateTime _fromDate = new DateTime(2020,5,21);
@@ -43,7 +50,7 @@ namespace CarFit.ViewModels
             set
             {
                 _fromDate = value;
-                //OnPropertyChanged(nameof(FromDate));
+                OnPropertyChanged(nameof(FromDate));
                 OnPropertyChanged(nameof(FilterDate));
                 LoadCleaningList();
             }
@@ -82,7 +89,7 @@ namespace CarFit.ViewModels
 
 
                 //at present using only one date, so 
-                tmp = $"{FromDate:dd-MMM-yy}";
+                tmp = $"{FromDate:dd-MMM-yyyy}";
 
 
                 return tmp;
@@ -134,5 +141,17 @@ namespace CarFit.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+
+        private List<TaskStatus> _taskStatuses;
+
+        public List<TaskStatus> TaskStatusList
+        {
+            get { return _taskStatuses; }
+        }
+
+
+
     }
 }

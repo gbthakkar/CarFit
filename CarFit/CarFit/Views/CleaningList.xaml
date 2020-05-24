@@ -11,6 +11,7 @@
              xmlns:vm="clr-namespace:CarFit.ViewModels;assembly=CarFit"
              xmlns:prism="http://prismlibrary.com"
              xmlns:valueConverter="clr-namespace:CarFit.Common.ValueConverter;assembly=CarFit"
+             xmlns:calCtrl="clr-namespace:XamForms.Controls;assembly=XamForms.Controls.Calendar"  
              mc:Ignorable="d"
              d:NavigationPage.HasNavigationBar="False"
              Title="Cleaning List"
@@ -33,17 +34,34 @@
 
     <ContentPage.Content>
 
-
-        <StackLayout><!--page content wrapper-->
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <!--page content wrapper-->
 
             <!--Calender wrapper-->
-            <AbsoluteLayout
-                IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"
-                > 
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                         IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"
+                         >
+                <calCtrl:Calendar Padding="25,0,25,0"
+                                  SelectedBorderWidth="2"   
+                                  DisabledBorderColor="Black"  
+                                  ShowNumberOfWeek="false"
+                                  StartDay="Monday"  
+                                  TitleLabelTextColor="Purple"  
+                                  TitleLeftArrowTextColor="Blue"  
+                                  SelectedDate="{Binding FromDate}"
+                                  VerticalOptions="FillAndExpand"
+                                  HorizontalOptions="FillAndExpand"
+                                  DateClicked="Calendar_OnDateClicked"
+                />
+            </StackLayout>
+
+
+            <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                            IsVisible="False"
+            >
                 <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"-->
                 <StackLayout>
-                    <views:Calendar></views:Calendar>
-
+                    <views:Calendar IsVisible="True"></views:Calendar>
                 </StackLayout>
 
                 <Button
@@ -66,47 +84,34 @@
                 </Button>
             </AbsoluteLayout>
 
-                
-           
-
-
-
-
-
-
-            <StackLayout>
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
+                </StackLayout.GestureRecognizers>
 
                 <Grid Padding="0" 
-                      IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}">
-                    <!--IsVisible="{Binding IsCalenderVisible,Mode=TwoWay,UpdateSourceEventName=PropertyChanged,Converter={valueConverter:InverseBoolConverter}}">-->
+                      IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}"
+                      >
+                    <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}"-->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="5*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" 
-                       Text="{Binding FilterDate,UpdateSourceEventName=PropertyChanged}" 
+                    <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='65,60,0,0', Android='65,30,20,0'}" 
+                       Text="{Binding FilterDate,UpdateSourceEventName=PropertyChanged}"
                        Style="{StaticResource PageHeading}" 
-                       HorizontalTextAlignment="Center" IsVisible="False"
+                       HorizontalTextAlignment="Center"
                        FontFamily="{StaticResource BoldFont}" />
-
-
-                    <DatePicker x:Name="FilterFromDate"
-                        Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='75,60,0,0', Android='75,30,20,0'}" 
-                        Date="{Binding FromDate.Date,UpdateSourceEventName=PropertyChanged,Mode=TwoWay}"
-                        DateSelected="FilterFromDate_OnDateSelected"
-                        >
-                        <DatePicker.Format>dd-MMM-yyyy</DatePicker.Format>
-                    </DatePicker>
 
                     <ffimageloadingsvg:SvgCachedImage Margin="{OnPlatform iOS='0,60,0,0', Android='0,30,20,0'}" 
                         Source="Calender.svg" 
                         WidthRequest="20" 
-                        Grid.Row="0" Grid.Column="1" 
+                        Grid.Row="0" Grid.Column="1"
 			        >
                         <ffimageloadingsvg:SvgCachedImage.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ShowCalenderCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>
@@ -114,10 +119,19 @@
                     </ffimageloadingsvg:SvgCachedImage>
                 </Grid>
 
-                <CollectionView ItemsSource="{Binding CleaningList,UpdateSourceEventName=PropertyChanged}" Margin="20,20,20,20">
+                <CollectionView ItemsSource="{Binding CleaningList,UpdateSourceEventName=PropertyChanged}" Margin="20,20,20,20"
+                                >
+                    <CollectionView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
+                    </CollectionView.GestureRecognizers>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Margin="0, 0, 0, 15">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+
                                 <Frame                               
                                 HorizontalOptions="StartAndExpand"
                                 VerticalOptions="StartAndExpand"                                

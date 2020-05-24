@@ -18,5 +18,7 @@ namespace CarFit.ViewModels
         ObservableCollection<CarWashTask> CleaningList { get; }
         bool IsCalenderVisible { get; set; }
         void LoadCleaningList();
+
+        List<TaskStatus> TaskStatusList { get; }
     }
 }

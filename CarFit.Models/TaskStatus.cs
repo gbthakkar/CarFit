@@ -12,10 +12,10 @@ namespace CarFit.Models
         public string Color { get; set; }
 
         /*
-        To Do = #4E77D6
-        InProgress = #F5C7O9
-        Done = #25A87B
-        Rejected = #BEF6565
+        1 = To Do = #4E77D6
+        2 = InProgress = #F5C7O9
+        3 = Done = #25A87B
+        4= Rejected = #BEF6565
          */
     }
 }

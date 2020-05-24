@@ -11,6 +11,7 @@ using CarFit.ViewModels;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using SkiaSharp;
+using XamForms.Controls;
 
 namespace CarFit.Views
 {
@@ -21,11 +22,11 @@ namespace CarFit.Views
         private IDialogService _dialogService;
 
 
-        
+
 
         //public CleaningList()
         //{
-            
+
         //}
 
         public CleaningList(IDialogService dialogService)
@@ -56,10 +57,26 @@ namespace CarFit.Views
         }
 
 
-        private void FilterFromDate_OnDateSelected(object sender, DateChangedEventArgs e)
+        //private void FilterFromDate_OnDateSelected(object sender, DateChangedEventArgs e)
+        //{
+        //    var obj = this.BindingContext as CleaningListViewModel;
+        //    obj.FromDate = e.NewDate;
+        //}
+
+        private void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
         {
             var obj = this.BindingContext as CleaningListViewModel;
-            obj.FromDate = e.NewDate;
+            if (obj.IsCalenderVisible)
+            {
+                obj.IsCalenderVisible = false;
+            }
+        }
+
+        private void Calendar_OnDateClicked(object sender, DateTimeEventArgs e)
+        {
+            var obj = this.BindingContext as CleaningListViewModel;
+            obj.FromDate = e.DateTime;
+
         }
     }
 }
