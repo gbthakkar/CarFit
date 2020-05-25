@@ -4,37 +4,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CarFit.Models;
+using CarFit.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
 using CarFit.ViewModels;
 using Prism.Commands;
+using Prism.DryIoc;
+using Prism.Ioc;
 using Prism.Services.Dialogs;
 using SkiaSharp;
 using XamForms.Controls;
+using DryIoc;
 
 namespace CarFit.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CleaningList : ContentPage, ICleaningList
+    public partial class CleaningList : ContentPage
     {
+
+        #region Fields
+
         //private ICleaningListViewModel _cleaningListViewModel;
         private IDialogService _dialogService;
+        private List<TaskStatusMap> _TaskStatusMap;
+        #endregion
 
+        #region Constructor 
 
-
-
-        //public CleaningList()
-        //{
-
-        //}
-
-        public CleaningList(IDialogService dialogService)
+        public CleaningList()
         {
             InitializeComponent();
 
             //_cleaningListViewModel = cleaningListViewModel;
-            _dialogService = dialogService;
+            _dialogService = App.IoCContainer.Resolve<IDialogService>();
+            ICommonService commonService = App.IoCContainer.Resolve<ICommonService>();
+            _TaskStatusMap = commonService.GetTaskMapList();
 
             //this.BindingContext = _cleaningListViewModel;
 
@@ -47,6 +52,14 @@ namespace CarFit.Views
 
 
         }
+        #endregion
+
+
+        #region Properties
+        #endregion
+
+
+        #region Methods
 
         protected override void OnSizeAllocated(double width, double height)
         {
@@ -55,14 +68,6 @@ namespace CarFit.Views
 
             VisualStateManager.GoToState(PageHeading, state);
         }
-
-
-        //private void FilterFromDate_OnDateSelected(object sender, DateChangedEventArgs e)
-        //{
-        //    var obj = this.BindingContext as CleaningListViewModel;
-        //    obj.FromDate = e.NewDate;
-        //}
-
         private void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
         {
             var obj = this.BindingContext as CleaningListViewModel;
@@ -71,12 +76,21 @@ namespace CarFit.Views
                 obj.IsCalenderVisible = false;
             }
         }
-
         private void Calendar_OnDateClicked(object sender, DateTimeEventArgs e)
         {
             var obj = this.BindingContext as CleaningListViewModel;
             obj.FromDate = e.DateTime;
 
         }
+        #endregion
+
+
+
+
+
+
+
+
+
     }
 }

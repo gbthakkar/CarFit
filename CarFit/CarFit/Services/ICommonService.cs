@@ -8,5 +8,6 @@ namespace CarFit.Services
     interface ICommonService
     {
         List<TaskStatus> GetTaskStatusList();
+        List<TaskStatusMap> GetTaskMapList();
     }
 }

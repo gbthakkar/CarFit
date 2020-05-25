@@ -65,7 +65,7 @@ namespace CarFit
 
             containerRegistry.Register<ViewModels.ICleaningListViewModel, ViewModels.CleaningListViewModel>();
 
-            containerRegistry.Register<Views.ICleaningList,Views.CleaningList>();
+            
         }
 
 

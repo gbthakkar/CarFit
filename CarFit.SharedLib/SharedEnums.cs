@@ -4,10 +4,6 @@ using System.Text;
 
 namespace CarFit.SharedLib
 {
-    public class SharedEnums
-    {
-    }
-
     public enum TaskStatusEnum
     {
         ToDo = 1,

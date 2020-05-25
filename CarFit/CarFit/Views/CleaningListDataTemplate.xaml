@@ -5,14 +5,52 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:vm="clr-namespace:CarFit.ViewModels;assembly=CarFit"
+             xmlns:dto="clr-namespace:CarFit.Models;assembly=CarFit.Models"
              mc:Ignorable="d"
              x:Class="CarFit.Views.CleaningListDataTemplate">
 
-    <ContentView.Content>
-        
+    <!--<ContentView.BindingContext>
+        <dto:CarWashTask></dto:CarWashTask>
+    </ContentView.BindingContext>-->
 
+    <ContentView.Content>
 
         <StackLayout >
+
+
+            <!--
+                AbsoluteLayout.LayoutBounds="0, 0, 0, 0" 
+                AbsoluteLayout.LayoutFlags="All"
+                -->
+            <ContentView x:Name="StatusPopupListView" Padding="50, 0" BackgroundColor="#DEE6E5"
+                         AbsoluteLayout.LayoutBounds="0, 0, 1, 1" 
+                         AbsoluteLayout.LayoutFlags="All"
+                         IsVisible="False"
+                         >
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <StackLayout Orientation="Vertical" HeightRequest="200" WidthRequest="300"
+                                  BackgroundColor="White">
+                        <ListView x:Name="StatusList" ItemSelected="StatusList_OnItemSelected"
+                                  
+                                  >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Label 
+                                            HorizontalOptions="Center"
+                                            FontSize="Large"
+                                            Text="{Binding Name}"></Label>
+                                    </ViewCell>
+                                </DataTemplate>
+                                
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        
+                    </StackLayout>
+                </StackLayout>
+            </ContentView>
+            
 
             <Grid Padding="0">
 
@@ -59,11 +97,14 @@
                     CornerRadius="{OnPlatform iOS='20,0,20,0', Android='45,0,45,0'}"
                     HeightRequest="40">
                     <Button
-                        x:Name="ButtonStyle"
+                        x:Name="BtnStatusName"
                         BackgroundColor="{Binding TaskStatus.Color}"
                         Text="{Binding TaskStatus.Name}"
                         FontFamily="{StaticResource BoldFont}"
-                        Style="{StaticResource buttonStyleList}" />
+                        Style="{StaticResource buttonStyleList}"
+                        Clicked="BtnStatusName_OnClicked"
+                        CommandParameter="{Binding Id}"
+                        />
                 </yummy:PancakeView>
 
                 <Label
@@ -137,10 +178,10 @@
                             Grid.Column="0"
                             HorizontalOptions="End" />
                         <Label
-                            x:Name="Icon2Lbl"
+                            x:Name="LblVisitTimeUsed"
                             Grid.Row="0"
                             Grid.Column="1"
-                            Text="55 min"
+                            Text="{Binding VisitTimeUsed,StringFormat='{0} Sec'}"
                             FontFamily="{StaticResource RegularFont}"
                             Style="{StaticResource NormalText12New}"
                             HorizontalOptions="FillAndExpand"
@@ -210,7 +251,7 @@
                             x:Name="Icon4Lbl"
                             Grid.Row="0"
                             Grid.Column="1"
-                            Text="3.6 km¯"
+                            Text="{Binding Distance,StringFormat='{0:F2} km'   }"
                             FontFamily="{StaticResource RegularFont}"
                             Style="{StaticResource NormalText12New}"
                             HorizontalOptions="FillAndExpand"

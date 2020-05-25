@@ -1,4 +1,8 @@
-﻿using FFImageLoading.Forms.Platform;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using FFImageLoading.Forms.Platform;
 using Foundation;
 using Prism;
 using Prism.Ioc;
@@ -24,6 +28,9 @@ namespace CarFit.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+
             CachedImageRenderer.Init();
             CachedImageRenderer.InitImageSourceHandler();
 
@@ -31,6 +38,47 @@ namespace CarFit.iOS
 
             return base.FinishedLaunching(app, options);
         }
+
+        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        /// If there is an unhandled exception, the exception information is displayed
+        /// on screen the next time the app is started (only in debug configuration)
+        /// </summary>
+        [Conditional("DEBUG")]
+        private static void DisplayCrashReport()
+        {
+            const string errorFilename = "Fatal.log";
+            var libraryPath = Environment.GetFolderPath(Environment.SpecialFolder.Resources);
+            var errorFilePath = Path.Combine(libraryPath, errorFilename);
+
+            if (!File.Exists(errorFilePath))
+            {
+                return;
+            }
+
+            var errorText = File.ReadAllText(errorFilePath);
+            var alertView = new UIAlertView("Crash Report", errorText, null, "Close", "Clear") { UserInteractionEnabled = true };
+            alertView.Clicked += (sender, args) =>
+            {
+                if (args.ButtonIndex != 0)
+                {
+                    File.Delete(errorFilePath);
+                }
+            };
+            alertView.Show();
+        }
+
+
     }
 
     public class iOSInitializer : IPlatformInitializer

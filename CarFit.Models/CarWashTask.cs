@@ -27,6 +27,13 @@ namespace CarFit.Models
 
             }
         }
+
+        public double HouseOwnerLatitude { get; set; }
+        public double HouseOwnerLongitude { get; set; }
+
+        public double Distance { get; set; } = 0;
+
+
         public string WashType { get; set; }
 
         public int TaskStatusId { get; set; }
@@ -88,5 +95,12 @@ namespace CarFit.Models
             }
 
         }
+
+
+        public DateTime? WorkStartTime { get; set; }
+        public DateTime? WorkEndTime { get; set; }
+
+        public int VisitTimeUsed { get; set; } = 0;
+
     }
 }

@@ -23,30 +23,39 @@ namespace CarFit.ViewModels
     public class CleaningListViewModel : BindableBase, INotifyPropertyChanged, ICleaningListViewModel
     {
 
-        private readonly ICarWashService _carWashService;
-        private readonly ICommonService _commonService;
+        #region Fields
+
+        private readonly ICarWashService _carWashService; //for getting data from API
+        private readonly ICommonService _commonService; // for getting master data from API
+        private bool _isRefreshing; //flag to track refresh
+        private Command _refreshViewCommand; //command to trigger refresh.
+        DateTime _fromDate = new DateTime(2020, 5, 21);//use to filter data while fetching from API
+        DateTime _toDate = new DateTime(2020, 5, 21);//use to filter data while fetching from API in case of we implement date range.
+        private bool _isCalenderVisible = false;//flage to control calendar visibility
+        private List<TaskStatus> _taskStatuses;//to hold all task statuses.
 
 
-        //ctor
+        #endregion Fields
+
+
+        #region Constructor
         public CleaningListViewModel()
         {
             _carWashService = App.IoCContainer.Resolve<ICarWashService>();
             _commonService = App.IoCContainer.Resolve<ICommonService>();
             ShowCalenderCommand = new DelegateCommand(ShowCalender);
             PageTapCommand = new DelegateCommand(PageTapAction);
-
-            _taskStatuses = _commonService.GetTaskStatusList();
-            LoadCleaningList();
         }
 
+        #endregion
+        //ctor
 
-        
-        public new event PropertyChangedEventHandler PropertyChanged;
+        #region Properties
 
-        DateTime _fromDate = new DateTime(2020,5,21);
-        public DateTime FromDate
+        public new event PropertyChangedEventHandler PropertyChanged;// to invoke property change event.
+        public DateTime FromDate //getter setter for _fromDate
         {
-            get { return _fromDate;}
+            get { return _fromDate; }
             set
             {
                 _fromDate = value;
@@ -54,14 +63,11 @@ namespace CarFit.ViewModels
                 OnPropertyChanged(nameof(FilterDate));
                 LoadCleaningList();
             }
-        
-        }
-        
-        DateTime _toDate = new DateTime(2020, 5, 21);
 
-        public DateTime ToDate
+        }
+        public DateTime ToDate//getter setter for _toDate.
         {
-            get { return _toDate;}
+            get { return _toDate; }
             set
             {
                 _toDate = value;
@@ -70,9 +76,7 @@ namespace CarFit.ViewModels
             }
 
         }
-        
-        
-        public string FilterDate
+        public string FilterDate // formatted date to display on label.
         {
             get
             {
@@ -96,15 +100,14 @@ namespace CarFit.ViewModels
             }
 
         }
-        public ICommand ShowCalenderCommand { get; private set; }
-        public ICommand PageTapCommand { get; private set; }
+        public ICommand ShowCalenderCommand { get; private set; }//to invoke command/method to change flag to display calendar
+        public ICommand PageTapCommand { get; private set; }//to invoke command/method to change flag to hide calendar
 
-        public ObservableCollection<CarWashTask> CleaningList { get; private set; }
+        public ObservableCollection<CarWashTask> CleaningList { get; private set; }//cleaning task list data.
 
-        private bool _isCalenderVisible = false;
-        public bool IsCalenderVisible
+        public bool IsCalenderVisible //getter setter for _isCalendarVisible flag.
         {
-            get { return _isCalenderVisible;}
+            get { return _isCalenderVisible; }
             set
             {
                 _isCalenderVisible = value;
@@ -112,12 +115,28 @@ namespace CarFit.ViewModels
             }
         }
 
-        
+        public List<TaskStatus> TaskStatusList//getter property for _taskStatuses.
+        {
+            get { return _taskStatuses; }
+        }
+
+        public bool IsRefreshing //getter setter for _isRefreshing flag.
+        {
+            get => _isRefreshing;
+            //set => SetProperty(ref _isRefreshing, value);
+            set
+            {
+                _isRefreshing = value;
+                OnPropertyChanged(nameof(IsRefreshing));
+            }
+        }
+
+        #endregion Properties
 
 
-       
+        #region Methods
 
-        public void LoadCleaningList()
+        public void LoadCleaningList()//fetch data from API
         {
             //var source = _carWashService.GetCleaningList();
             this.CleaningList = new ObservableCollection<CarWashTask>(_carWashService.GetCleaningList(FromDate));
@@ -126,30 +145,45 @@ namespace CarFit.ViewModels
 
         }
 
-
-        private void ShowCalender()
+        private void ShowCalender()//command delegate  to change the flag.
         {
             this.IsCalenderVisible = true;
         }
 
-        private void PageTapAction()
+        private void PageTapAction()//command delegate  to change the flag.
         {
             this.IsCalenderVisible = false;
         }
 
+        //to call each time when property value get change
         protected new virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-
-        private List<TaskStatus> _taskStatuses;
-
-        public List<TaskStatus> TaskStatusList
+        public Command RefreshViewCommand //command to fresh data.
         {
-            get { return _taskStatuses; }
+            get
+            {
+                return _refreshViewCommand ?? (_refreshViewCommand = new Command(() =>
+                {
+                    this.RefreshData();
+                }));
+            }
         }
+
+        private void RefreshData()//method to each time load data [first time or onRefresh.]
+        {
+            _taskStatuses = _commonService.GetTaskStatusList();
+            LoadCleaningList();
+            this.IsRefreshing = false;
+        }
+
+        #endregion Methods
+
+
+
+
 
 
 

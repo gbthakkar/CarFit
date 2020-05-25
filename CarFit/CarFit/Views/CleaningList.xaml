@@ -34,14 +34,18 @@
 
     <ContentPage.Content>
 
-        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <!--page content wrapper-->
+        <RefreshView IsRefreshing="{Binding IsRefreshing}" RefreshColor="Red"    
+                     Command="{Binding RefreshViewCommand}">
+            <ScrollView>
 
-            <!--Calender wrapper-->
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                    <!--page content wrapper-->
+
+                    <!--Calender wrapper-->
+                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                          IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"
                          >
-                <calCtrl:Calendar Padding="25,0,25,0"
+                        <calCtrl:Calendar Padding="25,0,25,0"
                                   SelectedBorderWidth="2"   
                                   DisabledBorderColor="Black"  
                                   ShowNumberOfWeek="false"
@@ -53,18 +57,18 @@
                                   HorizontalOptions="FillAndExpand"
                                   DateClicked="Calendar_OnDateClicked"
                 />
-            </StackLayout>
+                    </StackLayout>
 
 
-            <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                    <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
                             IsVisible="False"
             >
-                <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"-->
-                <StackLayout>
-                    <views:Calendar IsVisible="True"></views:Calendar>
-                </StackLayout>
+                        <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged}"-->
+                        <StackLayout>
+                            <views:Calendar IsVisible="True"></views:Calendar>
+                        </StackLayout>
 
-                <Button
+                        <Button
                     x:Name="BtnCLoseCalender"
                     BackgroundColor="LightGray"
                     Text="[ X ]"
@@ -77,85 +81,87 @@
                     Margin="0,5,5,0"
                     Command="{Binding PageTapCommand}"
                     >
-                    <!--<Button.GestureRecognizers>
+                            <!--<Button.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding PageTapCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>
                     </Button.GestureRecognizers>-->
 
-                </Button>
-            </AbsoluteLayout>
+                        </Button>
+                    </AbsoluteLayout>
 
-            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                <StackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
-                </StackLayout.GestureRecognizers>
+                    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
+                        </StackLayout.GestureRecognizers>
 
-                <Grid Padding="0" 
+                        <Grid Padding="0" 
                       IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}"
                       >
-                    <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}"-->
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
+                            <!--IsVisible="{Binding IsCalenderVisible,UpdateSourceEventName=PropertyChanged,Converter={StaticResource InverseBool}}"-->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
 
-                    <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='65,60,0,0', Android='65,30,20,0'}" 
+                            <Label x:Name="PageHeading" Grid.Row="0" Grid.Column="0" Margin="{OnPlatform iOS='65,60,0,0', Android='65,30,20,0'}" 
                        Text="{Binding FilterDate,UpdateSourceEventName=PropertyChanged}"
                        Style="{StaticResource PageHeading}" 
                        HorizontalTextAlignment="Center"
                        FontFamily="{StaticResource BoldFont}" />
 
-                    <ffimageloadingsvg:SvgCachedImage Margin="{OnPlatform iOS='0,60,0,0', Android='0,30,20,0'}" 
+                            <ffimageloadingsvg:SvgCachedImage Margin="{OnPlatform iOS='0,60,0,0', Android='0,30,20,0'}" 
                         Source="Calender.svg" 
                         WidthRequest="20" 
                         Grid.Row="0" Grid.Column="1"
 			        >
-                        <ffimageloadingsvg:SvgCachedImage.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ShowCalenderCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>
-                        </ffimageloadingsvg:SvgCachedImage.GestureRecognizers>
-                    </ffimageloadingsvg:SvgCachedImage>
-                </Grid>
+                                <ffimageloadingsvg:SvgCachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShowCalenderCommand}"  NumberOfTapsRequired="1"></TapGestureRecognizer>
+                                </ffimageloadingsvg:SvgCachedImage.GestureRecognizers>
+                            </ffimageloadingsvg:SvgCachedImage>
+                        </Grid>
 
-                <CollectionView ItemsSource="{Binding CleaningList,UpdateSourceEventName=PropertyChanged}" Margin="20,20,20,20"
+                        <CollectionView ItemsSource="{Binding CleaningList,UpdateSourceEventName=PropertyChanged}" Margin="20,20,20,20"
                                 >
-                    <CollectionView.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
-                    </CollectionView.GestureRecognizers>
+                            <CollectionView.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
+                            </CollectionView.GestureRecognizers>
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout Margin="0, 0, 0, 15">
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
-                                </StackLayout.GestureRecognizers>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Margin="0, 0, 0, 15">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped"></TapGestureRecognizer>
+                                        </StackLayout.GestureRecognizers>
 
-                                <Frame                               
+                                        <Frame                               
                                 HorizontalOptions="StartAndExpand"
                                 VerticalOptions="StartAndExpand"                                
                                 Padding="10,20,0,10" 
                                 HasShadow="False"
                                 IsClippedToBounds="True" BackgroundColor="#ffffff" CornerRadius="15" >
 
-                                    <views:CleaningListDataTemplate></views:CleaningListDataTemplate>
+                                            <views:CleaningListDataTemplate></views:CleaningListDataTemplate>
 
 
-                                </Frame>
-                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
 
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
 
-            </StackLayout>
-
-
-        </StackLayout>
+                    </StackLayout>
 
 
+                </StackLayout>
+
+
+            </ScrollView>
+        </RefreshView>
 
     </ContentPage.Content>
 

@@ -13,6 +13,7 @@ namespace CarFit.Common
 
         public static string CleaningListUrl = $"{DataApiUrl}/GetCleaningList";
         public static string TaskStatusListUrl = $"{DataApiUrl}/GetTaskStatusList";
+        public static string GetTaskMapList = $"{DataApiUrl}/GetTaskMapList";
 
 
     }
